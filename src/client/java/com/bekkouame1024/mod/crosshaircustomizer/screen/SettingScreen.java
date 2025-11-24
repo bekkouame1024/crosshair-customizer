@@ -1,6 +1,7 @@
 package com.bekkouame1024.mod.crosshaircustomizer.screen;
 
 import com.bekkouame1024.mod.crosshaircustomizer.*;
+import com.bekkouame1024.mod.crosshaircustomizer.input.InputState;
 import com.bekkouame1024.mod.crosshaircustomizer.managers.CrosshairManager;
 import com.bekkouame1024.mod.crosshaircustomizer.model.MenuType;
 import com.bekkouame1024.mod.crosshaircustomizer.utils.FileNameValidator;
@@ -31,8 +32,6 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
     private static final int CROSSHAIR_CONTAINER_COLOR = 0xE1101010;
     
     private ModConfig config;
-
-    private static boolean isShiftDown = false;
     
     private Map<FlowLayout, String> crosshairItems = new HashMap<>();
 
@@ -292,7 +291,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
         
 
         crosshairContainer.mouseDown().subscribe((mouseX, mouseY, button) -> {
-            if (isShiftDown) {
+            if (InputState.isShiftDown()) {
                 if (crosshairContainer.children().getFirst() instanceof SelectBoxComponent selectBox) {
                     selectBox.checked(!selectBox.checked());
                 }
@@ -394,9 +393,5 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
         );
 
         rootComponent.child(overlay);
-    }
-
-    public static void setShiftDown(boolean shiftDown) {
-        isShiftDown = shiftDown;
     }
 }

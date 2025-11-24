@@ -1,5 +1,6 @@
 package com.bekkouame1024.mod.crosshaircustomizer;
 
+import com.bekkouame1024.mod.crosshaircustomizer.input.InputState;
 import com.bekkouame1024.mod.crosshaircustomizer.managers.CrosshairManager;
 import com.bekkouame1024.mod.crosshaircustomizer.screen.CanvasScreen;
 import com.bekkouame1024.mod.crosshaircustomizer.utils.KeyBindRegister;
@@ -26,13 +27,13 @@ public class CrosshairCustomizerClient implements ClientModInitializer {
 			if(!(screen instanceof CanvasScreen)) {
 				return;
 			}
-			CanvasScreen.setMouseDown(false, 0);
+			InputState.setMouseDown(false, 0);
 			
 			ScreenMouseEvents.beforeMouseClick(screen).register((scr, mouseX, mouseY, button) -> {
-				CanvasScreen.setMouseDown(true, button);
+                InputState.setMouseDown(true, button);
 			});
 			ScreenMouseEvents.afterMouseRelease(screen).register((scr, mouseX, mouseY, button) -> {
-				CanvasScreen.setMouseDown(false, button);
+                InputState.setMouseDown(false, button);
 			});
 		});
 	}

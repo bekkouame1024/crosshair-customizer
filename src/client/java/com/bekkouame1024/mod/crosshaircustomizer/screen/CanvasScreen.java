@@ -1,6 +1,7 @@
 package com.bekkouame1024.mod.crosshaircustomizer.screen;
 
 import com.bekkouame1024.mod.crosshaircustomizer.*;
+import com.bekkouame1024.mod.crosshaircustomizer.input.InputState;
 import com.bekkouame1024.mod.crosshaircustomizer.managers.CrosshairManager;
 import com.bekkouame1024.mod.crosshaircustomizer.model.CanvasCellInfo;
 import com.bekkouame1024.mod.crosshaircustomizer.utils.FileNameValidator;
@@ -31,9 +32,7 @@ public class CanvasScreen extends BaseUIModelScreen<FlowLayout> {
     private static final int GRID_COLUMNS = 15;
     private static final int GRID_ROWS = 15;
     private static final int MARGIN_SIZE = 1;
-
-    private static boolean isMouseDown = false;
-    private static int mouseButton = 0;
+    
     private List<CanvasCellInfo> cells = new ArrayList<>();
 
     public CanvasScreen() {
@@ -68,14 +67,14 @@ public class CanvasScreen extends BaseUIModelScreen<FlowLayout> {
             cellBox.margins(Insets.of(0, bottom, 0, right));
 
             cellBox.mouseEnter().subscribe(() -> {
-                if (!isMouseDown) {
+                if (!InputState.isMouseDown()) {
                     return;
                 }
 
-                if (mouseButton == 0) {
+                if (InputState.getMouseButton() == 0) {
                     cellBox.color(Color.ofArgb(0xFFFFFFFF));
                     setCellPainted(col, row, true);
-                } else if (mouseButton == 1) {
+                } else if (InputState.getMouseButton() == 1) {
                     cellBox.color(Color.ofArgb(0xB4808080));
                     setCellPainted(col, row, false);
                 }
@@ -213,10 +212,5 @@ public class CanvasScreen extends BaseUIModelScreen<FlowLayout> {
                 .child(textBoxContainer)
                 .child(okButton);
         rootComponent.child(overlay);
-    }
-
-    public static void setMouseDown(boolean mouseDown, int button) {
-        isMouseDown = mouseDown;
-        mouseButton = button;
     }
 }

@@ -1,5 +1,6 @@
 package com.bekkouame1024.mod.crosshaircustomizer.utils;
 
+import com.bekkouame1024.mod.crosshaircustomizer.input.InputState;
 import com.bekkouame1024.mod.crosshaircustomizer.screen.SettingScreen;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -26,7 +27,7 @@ public class KeyBindRegister {
                     GLFW.glfwGetKey(windowHandle, GLFW.GLFW_KEY_LEFT_SHIFT) == GLFW.GLFW_PRESS || 
                             GLFW.glfwGetKey(windowHandle, GLFW.GLFW_KEY_RIGHT_SHIFT) == GLFW.GLFW_PRESS;
             
-            SettingScreen.setShiftDown(isPressed);
+            InputState.setShiftDown(isPressed);
         });
         
         
