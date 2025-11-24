@@ -4,7 +4,8 @@ import com.bekkouame1024.mod.crosshaircustomizer.*;
 import com.bekkouame1024.mod.crosshaircustomizer.input.InputState;
 import com.bekkouame1024.mod.crosshaircustomizer.managers.CrosshairManager;
 import com.bekkouame1024.mod.crosshaircustomizer.model.MenuType;
-import com.bekkouame1024.mod.crosshaircustomizer.utils.FileNameValidator;
+import com.bekkouame1024.mod.crosshaircustomizer.repository.CrosshairRepository;
+import com.bekkouame1024.mod.crosshaircustomizer.service.CrosshairService;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
@@ -16,14 +17,11 @@ import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.core.Insets;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
-import java.io.File;
 import java.util.*;
 
 public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
@@ -220,8 +218,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
 
         rootComponent.childById(FlowLayout.class, "openFolderButton").mouseDown().subscribe((mouseX, mouseY, button) -> {
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            File folder = new File("config/" + CrosshairCustomizer.MOD_ID + "/crosshairs");
-            new Thread(() -> Util.getOperatingSystem().open(folder)).start();
+            new Thread(() -> Util.getOperatingSystem().open(new CrosshairRepository().getCrosshairDirectoryPath())).start();
 
             return true;
         });
@@ -316,6 +313,9 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     private void openImportOverlay(FlowLayout rootComponent) {
+        CrosshairRepository crosshairRepository = new CrosshairRepository();
+        CrosshairService crosshairService = new CrosshairService(crosshairRepository);
+        
         FlowLayout importContainer = Containers.verticalFlow(Sizing.fixed(200), Sizing.fixed(180));
         importContainer.child(Components.label(Text.literal("Please select the png file to import.")).margins(Insets.of(5)))
                 .surface(Surface.blur(1f, 1f).and(Surface.flat(0xD4101010).and(Surface.outline(0xD0666666))))
@@ -331,63 +331,35 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
         ScrollContainer<DropdownComponent> scrollContainer = Containers.verticalScroll(Sizing.fixed(150), Sizing.fixed(120), dropdown);
         scrollContainer.surface(Surface.BLANK);
 
-        File folder = new File("config/" + CrosshairCustomizer.MOD_ID + "/crosshairs");
-
-        File[] files = folder.listFiles();
-        if (files == null || files.length == 0) {
+        List<String> fileNames = crosshairRepository.getAllCrosshairFileNames();
+        if (fileNames == null || fileNames.isEmpty()) {
             importContainer.child(scrollContainer);
             rootComponent.child(overlay);
             return;
         }
 
-        for (File file : Objects.requireNonNull(files)) {
-            if (!file.isFile() || !file.getName().endsWith(".png") || this.config.crosshairs.stream().anyMatch(entry -> entry.file.equals(file.getName()))) {
-                continue;
-            }
+        fileNames.forEach(fileName -> {
+            dropdown.button(Text.literal(fileName), button -> {
 
-            dropdown.button(Text.literal(file.getName()), button -> {
-                if (!FileNameValidator.isValidFileName(file.getName())) {
-                    PlayerEntity player = MinecraftClient.getInstance().player;
-                    if (player != null) {
-                        player.sendMessage(Text.literal("Invalid file name: " + file.getName() + " (Only alphanumeric characters and underscores are allowed, and the extension must be .png)").formatted(Formatting.RED), true);
-                    }
-                    return;
-                }
-
-                CrosshairManager.importCrosshair(file);
+                crosshairService.importCrosshair(fileName);
 
                 CrosshairManager.reloadCrosshairs();
 
                 MinecraftClient client = MinecraftClient.getInstance();
                 client.setScreen(new SettingScreen());
             });
-
-        }
+        });
 
         importContainer.child(scrollContainer);
 
         importContainer.child(
                 Components.button(Text.literal("Import All"), button -> {
-                            for (File file : Objects.requireNonNull(files)) {
-                                if (!file.isFile() || !file.getName().endsWith(".png") || this.config.crosshairs.stream().anyMatch(entry -> entry.file.equals(file.getName()))) {
-                                    continue;
-                                }
+                    crosshairService.importAllCrosshairs();
 
-                                if (!FileNameValidator.isValidFileName(file.getName())) {
-                                    PlayerEntity player = MinecraftClient.getInstance().player;
-                                    if (player != null) {
-                                        player.sendMessage(Text.literal("Invalid file name: " + file.getName() + " (Only alphanumeric characters and underscores are allowed, and the extension must be .png)").formatted(Formatting.RED), false);
-                                    }
-                                    continue;
-                                }
-
-                                CrosshairManager.importCrosshair(file);
-                            }
-
-                            CrosshairManager.reloadCrosshairs();
-                            MinecraftClient client = MinecraftClient.getInstance();
-                            client.setScreen(new SettingScreen());
-                        }).textShadow(false)
+                    CrosshairManager.reloadCrosshairs();
+                    MinecraftClient client = MinecraftClient.getInstance();
+                    client.setScreen(new SettingScreen());
+                }).textShadow(false)
                         .renderer(ButtonComponent.Renderer.flat(0xD0101010, 0xD0101010, 0xD0101010))
                         .margins(Insets.of(2))
         );
