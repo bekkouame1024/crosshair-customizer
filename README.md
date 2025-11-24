@@ -1,25 +1,74 @@
-# Stonecutter Fabric template
-## Setup
-1. Review the supported Minecraft versions in `settings.gradle.kts`.
-   For new entries, add `versions/.../gradle.properties` with the same keys as other versions.
-2. Change `mod.group`, `mod.id` and `mod.name` properties in `gradle.properties`.
-3. Rename `com.example` package in `src/main/java`.
-4. Rename `src/main/resources/template.mixins.json` to use your mod's id.
-5. Review the `LICENSE` file. 
-   See the [license decision diagram](https://docs.codeberg.org/getting-started/licensing/#license-decision-diagram) for common options.
-6. Review `src/main/resources/fabric.mod.json` to have up-to-date properties.
+# CrosshairCustomizer
 
-## Usage
-- Use `"Set active project to ..."` Gradle tasks to update the Minecraft version
-  available in `src/` classes.
-- Use `buildAndCollect` Gradle task to store mod releases in `build/libs/`.
-- Enable `mod-publish-plugin` in `stonecutter.gradle.kts` and `build.gradle.kts`
-  and the corresponding code blocks to publish releases to Modrinth and Curseforge.
-- Enable `maven-publish` in `build.gradle.kts` and the corresponding code block
-  to publish releases to a personal maven repository.
 
-## Useful links
-- [Stonecutter beginner's guide](https://stonecutter.kikugie.dev/wiki/start/): *spoiler: you* ***need*** *to understand how it works!*
-- [Fabric Discord server](https://discord.gg/v6v4pMv): for mod development help.
-- [Stonecutter Discord server](https://discord.kikugie.dev/): for Stonecutter and Gradle help.
-- [How To Ask Questions - the guide](http://www.catb.org/esr/faqs/smart-questions.html): also in [video form](https://www.youtube.com/results?search_query=How+To+Ask+Questions+The+Smart+Way).
+## 日本語
+
+### 説明
+ゲーム内クロスヘアをカスタマイズするMODです。
+
+### 機能
+Modrinthを御覧ください。
+https://modrinth.com/mod/crosshaircustomizer
+
+
+### 注意事項
+- このMODは他のクロスヘアMODと競合する可能性があります。
+- 使用する際は他のMODとの互換性に注意してください。
+- このMODを使用することで発生した問題について、作者は一切の責任を負いません。
+- MODの使用は自己責任でお願いします。
+
+---
+
+### 開発者の方へ
+- このプロジェクトでは**Stonecutter**を使用してマルチバージョン対応を行っています。
+- IssueやPull Requestは大歓迎ですが、あまり慣れていないため対応に時間がかかる場合があります。ご了承ください。
+
+#### APIについて
+APIは提供していません。
+ですが要望がある場合はIssueでお知らせください。検討します。
+
+
+---
+
+### ライセンス
+このプロジェクトはMITライセンスの下で公開されています。詳細はLICENSEファイルをご覧ください。
+サードパーティのリソース等に関しては、それぞれのライセンスに従ってください。(NOTICEファイルを参照)
+
+---
+
+
+## English
+
+### Description
+A mod that allows you to customize your in-game crosshair.
+
+### Features
+For more details, please visit the Modrinth page:
+https://modrinth.com/mod/crosshaircustomizer
+
+### Notes
+- This mod may conflict with other crosshair-related mods.
+- Please be mindful of compatibility with other mods.
+- The author assumes no responsibility for any issues that may arise from using this mod.
+- Use this mod at your own risk.
+
+---
+
+### For Developers
+- This project uses **Stonecutter** to support multiple Minecraft versions.
+- Issues and Pull Requests are welcome.
+  You may submit them in languages other than Japanese, but please note that responses may take longer as the maintainer is not highly experienced in handling them.
+
+#### About the API
+This mod does not provide a public API.
+However, if you need one, feel free to open an Issue. It may be considered.
+
+---
+
+### License
+This project is released under the MIT License. For details, please check the LICENSE file.
+Third-party resources follow their respective licenses (see the NOTICE file).
+
+### Translation Notice
+This English text was created with the help of machine translation tools such as ChatGPT.
+Accuracy is not guaranteed.
