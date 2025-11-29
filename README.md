@@ -8,7 +8,7 @@
 
 ### 機能
 Modrinthを御覧ください。
-https://modrinth.com/mod/crosshaircustomizer
+https://modrinth.com/mod/crosshair-customizer
 
 
 ### 注意事項
@@ -44,7 +44,7 @@ A mod that allows you to customize your in-game crosshair.
 
 ### Features
 For more details, please visit the Modrinth page:
-https://modrinth.com/mod/crosshaircustomizer
+https://modrinth.com/mod/crosshair-customizer
 
 ### Notes
 - This mod may conflict with other crosshair-related mods.
