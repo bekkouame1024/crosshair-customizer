@@ -1,74 +1,35 @@
 # CrosshairCustomizer
-
-
-## 日本語
-
-### 説明
-ゲーム内クロスヘアをカスタマイズするMODです。
-
-### 機能
-Modrinthを御覧ください。
+## Overview
+A Fabric mod that provides customizable in-game crosshairs.
+For feature descriptions, screenshots, downloads, and general user-facing information, please see the Modrinth page:
 https://modrinth.com/mod/crosshair-customizer
 
+This repository contains the source code and development resources for contributors and developers.
 
-### 注意事項
-- このMODは他のクロスヘアMODと競合する可能性があります。
-- 使用する際は他のMODとの互換性に注意してください。
-- このMODを使用することで発生した問題について、作者は一切の責任を負いません。
-- MODの使用は自己責任でお願いします。
+## Development
+This project uses **Stonecutter** to support multiple Minecraft versions.
+If you are contributing or building the mod yourself, please refer to Stonecutter’s documentation for details on version switching and workspace setup.
 
----
+## Contributing
+Issues and Pull Requests are welcome.
+Please note that the maintainer is not highly experienced with handling Issue and PR workflows, so responses may take time.
+Communication in languages other than Japanese is also welcome, but may further delay responses.
 
-### 開発者の方へ
-- このプロジェクトでは**Stonecutter**を使用してマルチバージョン対応を行っています。
-- IssueやPull Requestは大歓迎ですが、あまり慣れていないため対応に時間がかかる場合があります。ご了承ください。
+## API
+This project does **not** provide a public API.
+If you have a use case that requires one, feel free to open an Issue — it may be considered.
 
-#### APIについて
-APIは提供していません。
-ですが要望がある場合はIssueでお知らせください。検討します。
+## License
+This project is released under the MIT License.
+See the LICENSE file for full details.
 
+Third-party resources follow their respective licenses (see NOTICE).
 
----
+## Notes
+This README is intended for developers and contributors.
+User-facing information is intentionally kept minimal and is fully provided on Modrinth.
 
-### ライセンス
-このプロジェクトはMITライセンスの下で公開されています。詳細はLICENSEファイルをご覧ください。
-サードパーティのリソース等に関しては、それぞれのライセンスに従ってください。(NOTICEファイルを参照)
+## Disclaimer
+Some English text related to this project including parts of the Modrinth description and in-game messages was created with the help of machine translation tools.
 
----
-
-
-## English
-
-### Description
-A mod that allows you to customize your in-game crosshair.
-
-### Features
-For more details, please visit the Modrinth page:
-https://modrinth.com/mod/crosshair-customizer
-
-### Notes
-- This mod may conflict with other crosshair-related mods.
-- Please be mindful of compatibility with other mods.
-- The author assumes no responsibility for any issues that may arise from using this mod.
-- Use this mod at your own risk.
-
----
-
-### For Developers
-- This project uses **Stonecutter** to support multiple Minecraft versions.
-- Issues and Pull Requests are welcome.
-  You may submit them in languages other than Japanese, but please note that responses may take longer as the maintainer is not highly experienced in handling them.
-
-#### About the API
-This mod does not provide a public API.
-However, if you need one, feel free to open an Issue. It may be considered.
-
----
-
-### License
-This project is released under the MIT License. For details, please check the LICENSE file.
-Third-party resources follow their respective licenses (see the NOTICE file).
-
-### Translation Notice
-This English text was created with the help of machine translation tools such as ChatGPT.
-Accuracy is not guaranteed.
+**Translation accuracy is not guaranteed.**
