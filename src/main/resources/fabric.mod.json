@@ -28,6 +28,8 @@
   "accessWidener": "crosshaircustomizer.accesswidener",
   "depends": {
     "fabricloader": ">=0.17",
-    "minecraft": "${minecraft}"
+    "minecraft": "${minecraft}",
+    "fabric-api": "*",
+    "owo": "*"
   }
 }
