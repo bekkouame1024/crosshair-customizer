@@ -13,9 +13,7 @@ import io.wispforest.owo.ui.container.GridLayout;
 import io.wispforest.owo.ui.container.OverlayContainer;
 import io.wispforest.owo.ui.core.*;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -113,7 +111,7 @@ public class CanvasScreen extends BaseUIModelScreen<FlowLayout> {
         FlowLayout controlContainer = rootComponent.childById(FlowLayout.class, "controlContainer");
         controlContainer.surface(Surface.blur(1f, 1f).and(Surface.flat(0xB4101010)).and(new TopOutlineSurface(0xD0666666)));
 
-        controlContainer.child(UiComponentFactory.button(Identifier.of("crosshaircustomizer:textures/gui/save.png"),
+        controlContainer.child(UiComponentFactory.labeledIconButton(Identifier.of("crosshaircustomizer:textures/gui/save.png"),
                 buttonSprite,
                 Text.of("Save"),
                 (mouseX, mouseY, button) -> {
@@ -122,7 +120,7 @@ public class CanvasScreen extends BaseUIModelScreen<FlowLayout> {
                 })
         );
         
-        controlContainer.child(UiComponentFactory.button(Identifier.of("crosshaircustomizer:textures/gui/cancel.png"),
+        controlContainer.child(UiComponentFactory.labeledIconButton(Identifier.of("crosshaircustomizer:textures/gui/cancel.png"),
                 buttonSprite,
                 Text.of("Cancel"),
                 (mouseX, mouseY, button) -> {

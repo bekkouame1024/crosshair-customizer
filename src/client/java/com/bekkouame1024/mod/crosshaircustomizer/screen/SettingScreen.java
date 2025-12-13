@@ -113,7 +113,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
         FlowLayout topControlContainer = rootComponent.childById(FlowLayout.class, "topControlContainer");
         topControlContainer.surface(Surface.flat(0xB4101010).and(Surface.blur(1, 1)));
 
-        topControlContainer.child(UiComponentFactory.button(Identifier.of("crosshaircustomizer:textures/gui/up_order.png"),
+        topControlContainer.child(UiComponentFactory.iconButton(Identifier.of("crosshaircustomizer:textures/gui/up_order.png"),
                 buttonSprite,
                 Text.of("Move Crosshair Up"),
                 (mouseX, mouseY, button) -> {
@@ -127,7 +127,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                 })
         );
 
-        topControlContainer.child(UiComponentFactory.button(Identifier.of("crosshaircustomizer:textures/gui/down_order.png"),
+        topControlContainer.child(UiComponentFactory.iconButton(Identifier.of("crosshaircustomizer:textures/gui/down_order.png"),
                 buttonSprite,
                 Text.of("Move Crosshair Down"),
                 (mouseX, mouseY, button) -> {
@@ -144,9 +144,9 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
         
         topControlContainer.child(Components.spacer(100).sizing(Sizing.expand(), Sizing.fixed(1)));
 
-        topControlContainer.child(UiComponentFactory.button(Identifier.of("crosshaircustomizer:textures/gui/delete.png"), 
+        topControlContainer.child(UiComponentFactory.labeledIconButton(Identifier.of("crosshaircustomizer:textures/gui/delete.png"), 
                 buttonSprite,
-                Text.of("Delete Selected Crosshair(s)"),
+                Text.of("Delete"),
                 (mouseX, mouseY, button) -> {
                     crosshairItems.forEach((item, name) -> {
                         if (item == null) return;
@@ -210,9 +210,9 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                 .and(new TopOutlineSurface(0xD0666666))
         );
 
-        controlContainer.child(UiComponentFactory.button(Identifier.of("crosshaircustomizer:textures/gui/add.png"),
+        controlContainer.child(UiComponentFactory.labeledIconButton(Identifier.of("crosshaircustomizer:textures/gui/add.png"),
                 buttonSprite,
-                Text.of("Add Crosshair"),
+                Text.of("Draw"),
                 (mouseX, mouseY, button) -> {
                     MinecraftClient client = MinecraftClient.getInstance();
                     client.setScreen(new CanvasScreen());
@@ -220,16 +220,16 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                 })
         );
 
-        controlContainer.child(UiComponentFactory.button(Identifier.of("crosshaircustomizer:textures/gui/import.png"),
+        controlContainer.child(UiComponentFactory.labeledIconButton(Identifier.of("crosshaircustomizer:textures/gui/import.png"),
                 buttonSprite,
-                Text.of("Import from File"),
+                Text.of("Import"),
                 (mouseX, mouseY, button) -> {
                     openImportOverlay(rootComponent);
                     return true;
                 })
         );
 
-        controlContainer.child(UiComponentFactory.button(Identifier.of("crosshaircustomizer:textures/gui/open_folder.png"),
+        controlContainer.child(UiComponentFactory.labeledIconButton(Identifier.of("crosshaircustomizer:textures/gui/open_folder.png"),
                 buttonSprite,
                 Text.of("Open Folder"),
                 (mouseX, mouseY, button) -> {
@@ -240,24 +240,9 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
         
         controlContainer.child(Components.spacer(100).sizing(Sizing.expand(), Sizing.fixed(1)));
 
-        controlContainer.child(UiComponentFactory.button(Identifier.of("crosshaircustomizer:textures/gui/minecraft.png"),
+        controlContainer.child(UiComponentFactory.labeledIconButton(Identifier.of("crosshaircustomizer:textures/gui/reload.png"),
                 buttonSprite,
-                Text.of("Minecraft Default"),
-                (mouseX, mouseY, button) -> {
-                    if(CrosshairManager.getCurrentMenuType() == MenuType.MAIN) {
-                        crosshairItems.forEach((item, name) -> item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR)));
-                        CrosshairManager.resetCurrentCrosshairToDefault();
-                    }else if(CrosshairManager.getCurrentMenuType() == MenuType.TARGET) {
-                        crosshairItems.forEach((item, name) -> item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR)));
-                        CrosshairManager.resetCurrentTargetCrosshairToDefault();
-                    }
-                    return true;
-                })
-        );
-
-        controlContainer.child(UiComponentFactory.button(Identifier.of("crosshaircustomizer:textures/gui/reload.png"),
-                buttonSprite,
-                Text.of("Reload Crosshair"),
+                Text.of("Reload"),
                 (mouseX, mouseY, button) -> {
                     reloadCrosshairGrid(rootComponent);
                     return true;
