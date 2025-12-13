@@ -298,14 +298,27 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                     selectBox.checked(!selectBox.checked());
                 }
             } else {
-                if(CrosshairManager.getCurrentMenuType() == MenuType.MAIN) {
-                    crosshairItems.forEach((item, name) -> item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR)));
-                    crosshairContainer.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR).and(Surface.outline(0xD0FFFFFF)));
-                    CrosshairManager.setCurrentCrosshair(crosshairName);
-                }else if (CrosshairManager.getCurrentMenuType() == MenuType.TARGET) {
-                    crosshairItems.forEach((item, name) -> item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR)));
-                    crosshairContainer.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR).and(Surface.outline(0xD0FFFFFF)));
-                    CrosshairManager.setCurrentTargetCrosshair(crosshairName);
+                switch (CrosshairManager.getCurrentMenuType()) {
+                    case MAIN -> {
+                        crosshairItems.forEach((item, name) -> item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR)));
+                        
+                        if(config.currentCrosshair != null && config.currentCrosshair.getPath().equals(crosshairName)) {
+                            CrosshairManager.resetCurrentCrosshairToDefault();
+                            return true;
+                        }
+                        crosshairContainer.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR).and(Surface.outline(0xD0FFFFFF)));
+                        CrosshairManager.setCurrentCrosshair(crosshairName);
+                    }
+                    case TARGET -> {
+                        crosshairItems.forEach((item, name) -> item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR)));
+                        
+                        if(config.currentTargetCrosshair != null && config.currentTargetCrosshair.getPath().equals(crosshairName)) {
+                            CrosshairManager.resetCurrentTargetCrosshairToDefault();
+                            return true;
+                        }
+                        crosshairContainer.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR).and(Surface.outline(0xD0FFFFFF)));
+                        CrosshairManager.setCurrentTargetCrosshair(crosshairName);
+                    }
                 }
             }
             
