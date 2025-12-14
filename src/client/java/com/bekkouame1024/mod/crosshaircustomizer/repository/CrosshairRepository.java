@@ -15,12 +15,22 @@ import java.util.Objects;
 public class CrosshairRepository {
     private static final String CROSSHAIR_DIRECTORY = "config/" + CrosshairCustomizer.MOD_ID + "/crosshairs";
     
-    public void saveCrosshairImage(BufferedImage image, String fileName) {
-        File outputFile = new File(CROSSHAIR_DIRECTORY, fileName);
+    public boolean saveCrosshairImage(BufferedImage image, String fileName) {
+        File dir = new File(CROSSHAIR_DIRECTORY);
+        if (!dir.exists()) {
+            if (!dir.mkdirs()) {
+                CrosshairCustomizer.LOGGER.error("Failed to create crosshair directory: {}", dir.getAbsolutePath());
+                return false;
+            }
+        }
+
+        File outputFile = new File(dir, fileName);
         try {
             ImageIO.write(image, "PNG", outputFile);
+            return true;
         } catch (IOException e) {
             CrosshairCustomizer.LOGGER.error("Failed to save crosshair image: {}", fileName, e);
+            return false;
         }
     }
     

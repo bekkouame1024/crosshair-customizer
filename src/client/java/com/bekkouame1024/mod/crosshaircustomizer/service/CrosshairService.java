@@ -12,8 +12,11 @@ import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
+import com.bekkouame1024.mod.crosshaircustomizer.model.MenuType;
 
 public class CrosshairService {
     private final ModConfig config;
@@ -54,7 +57,11 @@ public class CrosshairService {
             CrosshairCustomizer.LOGGER.warn("Import failed: could not read image - {}", fileName);
             return;
         }
-        crosshairRepository.saveCrosshairImage(bufferedImage, fileName);
+        boolean saved = crosshairRepository.saveCrosshairImage(bufferedImage, fileName);
+        if (!saved) {
+            CrosshairCustomizer.LOGGER.warn("Import failed: could not save image - {}", fileName);
+            return;
+        }
 
         ModConfig config = CrosshairCustomizer.CONFIG;
         config.crosshairs.add(new ModConfig.CrosshairEntry(fileName, config.crosshairs.size()));
@@ -86,5 +93,105 @@ public class CrosshairService {
         CrosshairManager.putCrosshair(crosshairName, id);
 
         CrosshairCustomizer.LOGGER.info("Successfully imported crosshair: {}", fileName);
+    }
+
+    public static class SaveResult {
+        private final boolean ok;
+        private final String message;
+
+        private SaveResult(boolean ok, String message) {
+            this.ok = ok;
+            this.message = message;
+        }
+
+        public static SaveResult ok() { return new SaveResult(true, "Saved"); }
+        public static SaveResult fail(String message) { return new SaveResult(false, message); }
+
+        public boolean isOk() { return ok; }
+        public String getMessage() { return message; }
+    }
+
+    public SaveResult saveCrosshair(String name, BufferedImage image) {
+        String fileName = name + ".png";
+
+        if (!FileNameValidator.isValidFileName(fileName)) {
+            return SaveResult.fail("Invalid file name: " + name);
+        }
+
+        Path dir = crosshairRepository.getCrosshairDirectoryPath();
+        File outputFile = dir.resolve(fileName).toFile();
+        if (outputFile.exists()) {
+            return SaveResult.fail("File already exists: " + outputFile.getName());
+        }
+        
+        boolean saved = crosshairRepository.saveCrosshairImage(image, fileName);
+        if (!saved) {
+            return SaveResult.fail("Failed to save file: " + outputFile.getName());
+        }
+
+        ModConfig config = CrosshairCustomizer.CONFIG;
+        config.crosshairs.add(new ModConfig.CrosshairEntry(fileName, config.crosshairs.size()));
+        ConfigManager.save(config);
+
+        CrosshairManager.reloadCrosshairs();
+
+        return SaveResult.ok();
+    }
+
+    public int getSelectedIndex(MenuType menuType) {
+        if (menuType == MenuType.MAIN) {
+            if (this.config.currentCrosshair == null) return -1;
+            for (int i = 0; i < this.config.crosshairs.size(); i++) {
+                if (this.config.crosshairs.get(i).file.replace(".png", "").equals(this.config.currentCrosshair.getPath())) {
+                    return i;
+                }
+            }
+        } else if (menuType == MenuType.TARGET) {
+            if (this.config.currentTargetCrosshair == null) return -1;
+            for (int i = 0; i < this.config.crosshairs.size(); i++) {
+                if (this.config.crosshairs.get(i).file.replace(".png", "").equals(this.config.currentTargetCrosshair.getPath())) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public boolean swapCrosshair(int from, int to) {
+        if (from < 0 || to < 0 || from >= this.config.crosshairs.size() || to >= this.config.crosshairs.size()) return false;
+        ModConfig.CrosshairEntry temp = this.config.crosshairs.get(from);
+        this.config.crosshairs.set(from, this.config.crosshairs.get(to));
+        this.config.crosshairs.set(to, temp);
+
+        for (int i = 0; i < this.config.crosshairs.size(); i++) {
+            this.config.crosshairs.get(i).order = i;
+        }
+        ConfigManager.save(this.config);
+        return true;
+    }
+
+    public int deleteCrosshairs(List<String> names) {
+        int deleted = 0;
+        for (String name : names) {
+            CrosshairManager.deleteCrosshair(name);
+            deleted++;
+        }
+        return deleted;
+    }
+
+    public void setCurrentCrosshair(String name, MenuType menuType) {
+        if (menuType == MenuType.MAIN) {
+            if (name == null) {
+                CrosshairManager.resetCurrentCrosshairToDefault();
+            } else {
+                CrosshairManager.setCurrentCrosshair(name);
+            }
+        } else if (menuType == MenuType.TARGET) {
+            if (name == null) {
+                CrosshairManager.resetCurrentTargetCrosshairToDefault();
+            } else {
+                CrosshairManager.setCurrentTargetCrosshair(name);
+            }
+        }
     }
 }
