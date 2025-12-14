@@ -15,12 +15,26 @@
                     <vertical-alignment>center</vertical-alignment>
                 </flow-layout>
                 
-                <flow-layout direction="vertical" id="mainContainer">
+                <flow-layout direction="horizontal" id="mainContainer">
                     <children>
                         <flow-layout direction="vertical" id="gridContainer">
                             <children/>
                         </flow-layout>
+
+                        <flow-layout direction="vertical" id="colorPickerContainer">
+                            <children/>
+                            
+                            <sizing>
+                                <horizontal method="fixed">150</horizontal>
+                                <vertical method="fixed">209</vertical>
+                            </sizing>
+                            
+                            <horizontal-alignment>center</horizontal-alignment>
+                            <vertical-alignment>center</vertical-alignment>
+                        </flow-layout>
                     </children>
+                    
+                    <gap>8</gap>
                     
                     <sizing>
                         <horizontal method="fixed">400</horizontal>

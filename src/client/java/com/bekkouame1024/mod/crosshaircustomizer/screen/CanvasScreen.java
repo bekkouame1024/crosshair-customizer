@@ -4,6 +4,7 @@ import com.bekkouame1024.mod.crosshaircustomizer.*;
 import com.bekkouame1024.mod.crosshaircustomizer.input.InputState;
 import com.bekkouame1024.mod.crosshaircustomizer.managers.CrosshairManager;
 import com.bekkouame1024.mod.crosshaircustomizer.model.CanvasCellInfo;
+import com.bekkouame1024.mod.crosshaircustomizer.utils.ColorParsers;
 import com.bekkouame1024.mod.crosshaircustomizer.utils.FileNameValidator;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.*;
@@ -44,6 +45,45 @@ public class CanvasScreen extends BaseUIModelScreen<FlowLayout> {
         
         cells.clear();
 
+        FlowLayout colorPickerContainer = rootComponent.childById(FlowLayout.class, "colorPickerContainer").gap(8);
+        
+        FlowLayout currentColorContainer = Containers.verticalFlow(Sizing.fill(100), Sizing.fill(50)).gap(4);
+        
+        BoxComponent currentColorComponent = Components.box(Sizing.fill(100), Sizing.fill(85)).fill(true);
+
+        FlowLayout textBoxContainer = Containers.horizontalFlow(Sizing.fill(100), Sizing.content());
+        textBoxContainer.surface(new BottomOutlineSurface(0xD0ffffff));
+        
+        TextBoxComponent textBox = Components.textBox(Sizing.fill(), "");
+        textBox.setPlaceholder(Text.literal("Hex Color Code... (#AARRGGBB)").formatted(Formatting.GRAY));
+        textBox.setDrawsBackground(false);
+        textBox.setMaxLength("#AARRGGBB".length());
+
+        textBoxContainer.child(textBox);
+
+        ColorPickerComponent colorPicker = new ColorPickerComponent().showAlpha(true);
+        colorPicker.sizing(Sizing.fill(100), Sizing.fill(46));
+        colorPicker.onChanged().subscribe(color -> {
+            currentColorComponent.color(color);
+            textBox.setText(color.asHexString(true));
+        });
+        
+        textBox.onChanged().subscribe(text -> {
+            Color color = ColorParsers.tryParse(text);
+            if(color == null) {
+                return;
+            }
+            
+            colorPicker.selectedColor(color);
+        });
+        
+        currentColorContainer.child(textBoxContainer);
+        currentColorContainer.child(0, currentColorComponent);
+        
+
+        colorPickerContainer.child(colorPicker);
+        colorPickerContainer.child(currentColorContainer);
+        
         rootComponent.childById(FlowLayout.class, "mainContainer")
                 .surface(Surface.blur(1f, 1f).and(Surface.flat(0xB4101010)).and(new TopOutlineSurface(0xD0666666)));
 
@@ -69,29 +109,51 @@ public class CanvasScreen extends BaseUIModelScreen<FlowLayout> {
                 if (!InputState.isMouseDown()) {
                     return;
                 }
-
-                if (InputState.getMouseButton() == 0) {
-                    cellBox.color(Color.ofArgb(0xFFFFFFFF));
-                    setCellPainted(col, row, true);
-                } else if (InputState.getMouseButton() == 1) {
-                    cellBox.color(Color.ofArgb(0xB4808080));
-                    setCellPainted(col, row, false);
+                
+                switch (InputState.getMouseButton()) {
+                    case 0 -> {
+                        cellBox.color(colorPicker.selectedColor());
+                        paintCell(col, row, colorPicker.selectedColor());
+                    }
+                    case 1 -> {
+                        cellBox.color(Color.ofArgb(0xB4808080));
+                        paintCell(col, row, Color.ofArgb(0x00000000));
+                    }
+                    case 2 -> {
+                        Color currentColor = cells.stream()
+                                .filter(cell -> cell.getColumn() == col && cell.getRow() == row)
+                                .findFirst()
+                                .map(CanvasCellInfo::getColor)
+                                .orElse(Color.ofArgb(0x00000000));
+                        colorPicker.selectedColor(currentColor);
+                    }
                 }
             });
 
             cellBox.mouseDown().subscribe((mouseX, mouseY, button) -> {
-                if (button == 0) {
-                    cellBox.color(Color.ofArgb(0xFFFFFFFF));
-                    setCellPainted(col, row, true);
-                } else if (button == 1) {
-                    cellBox.color(Color.ofArgb(0xB4808080));
-                    setCellPainted(col, row, false);
+                switch (button) {
+                    case 0 -> {
+                        cellBox.color(colorPicker.selectedColor());
+                        paintCell(col, row, colorPicker.selectedColor());
+                    }
+                    case 1 -> {
+                        cellBox.color(Color.ofArgb(0xB4808080));
+                        paintCell(col, row, Color.ofArgb(0x00000000));
+                    }
+                    case 2 -> {
+                        Color currentColor = cells.stream()
+                                .filter(cell -> cell.getColumn() == col && cell.getRow() == row)
+                                .findFirst()
+                                .map(CanvasCellInfo::getColor)
+                                .orElse(Color.ofArgb(0x00000000));
+                        colorPicker.selectedColor(currentColor);
+                    }
                 }
 
                 return true;
             });
 
-            CanvasCellInfo cellInfo = new CanvasCellInfo(col, row, false);
+            CanvasCellInfo cellInfo = new CanvasCellInfo(col, row);
             cells.add(cellInfo);
 
             canvasGrid.child(cellBox, row, col);
@@ -131,11 +193,11 @@ public class CanvasScreen extends BaseUIModelScreen<FlowLayout> {
         );
     }
 
-    private void setCellPainted(int column, int row, boolean painted) {
+    private void paintCell(int column, int row, Color color) {
         cells.stream()
                 .filter(cell -> cell.getColumn() == column && cell.getRow() == row)
                 .findFirst()
-                .ifPresent(cell -> cell.setPainted(painted));
+                .ifPresent(cell -> cell.setColor(color));
     }
 
     private void saveImage(String name) {
@@ -162,7 +224,7 @@ public class CanvasScreen extends BaseUIModelScreen<FlowLayout> {
 
         BufferedImage bufferedImage = new BufferedImage(GRID_COLUMNS, GRID_ROWS, BufferedImage.TYPE_INT_ARGB);
         for (CanvasCellInfo cell : cells) {
-            int color = cell.isPainted() ? 0xFFFFFFFF : 0x00FFFFFF;
+            int color = cell.getColor().argb();
             bufferedImage.setRGB(cell.getColumn(), cell.getRow(), color);
         }
 

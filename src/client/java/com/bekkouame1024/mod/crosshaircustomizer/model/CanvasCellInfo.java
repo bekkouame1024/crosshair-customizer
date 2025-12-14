@@ -1,14 +1,15 @@
 package com.bekkouame1024.mod.crosshaircustomizer.model;
 
+import io.wispforest.owo.ui.core.Color;
+
 public class CanvasCellInfo {
     private final int column;
     private final int row;
-    private boolean isPainted;
+    private Color color = Color.ofArgb(0x00000000);
     
-    public CanvasCellInfo(int column, int row, boolean isPainted) {
+    public CanvasCellInfo(int column, int row) {
         this.column = column;
         this.row = row;
-        this.isPainted = isPainted;
     }
     
     public int getColumn() {
@@ -19,11 +20,11 @@ public class CanvasCellInfo {
         return row;
     }
     
-    public boolean isPainted() {
-        return isPainted;
+    public Color getColor() {
+        return color;
     }
     
-    public void setPainted(boolean painted) {
-        isPainted = painted;
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
