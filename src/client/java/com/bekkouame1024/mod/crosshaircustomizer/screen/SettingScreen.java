@@ -32,7 +32,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
     
     private ModConfig config;
     
-    private final Map<FlowLayout, String> crosshairItems = new HashMap<>();
+    private final List<String> crosshairs = new ArrayList<>();
     private final CrosshairService crosshairService = new CrosshairService(new CrosshairRepository());
 
     public SettingScreen() {
@@ -72,7 +72,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
             int row = i / COLUMNS;
             int col = i % COLUMNS;
 
-            ParentComponent crosshairItem = createCrosshairItem(crosshairNames.get(i));
+            ParentComponent crosshairItem = createCrosshairItem(rootComponent, crosshairNames.get(i));
             crosshairGrid.child(crosshairItem, row, col);
         }
 
@@ -84,16 +84,16 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
         if (gridContainer != null) {
             new ArrayList<>(gridContainer.children()).forEach(gridContainer::removeChild);
         }
-        crosshairItems.clear();
+        crosshairs.clear();
 
         CrosshairManager.reloadCrosshairs();
 
         buildCrosshairGrid(rootComponent);
     }
 
-    private FlowLayout createCrosshairItem(String crosshairName) {
+    private FlowLayout createCrosshairItem(FlowLayout rootComponent, String crosshairName) {
         FlowLayout crosshairContainer = Containers.verticalFlow(Sizing.content(), Sizing.content())
-                .child(new SelectBoxComponent(8))
+                .child(new SelectBoxComponent(8).id("ch/" + crosshairName + "/selectBox"))
                 .child(
                         Components
                                 .texture(CrosshairManager.getCrosshair(crosshairName), 0, 0, 15, 15, 15, 15)
@@ -106,6 +106,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                 .padding(Insets.of(5))
                 .surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR))
                 .tooltip(Text.literal(crosshairName));
+        crosshairContainer.id("ch/" + crosshairName + "/container");
         
         if(CrosshairManager.getCurrentMenuType() == MenuType.MAIN) {
             Identifier currentCrosshair = this.config.currentCrosshair;
@@ -120,16 +121,21 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
         }
 
         
-
         crosshairContainer.mouseDown().subscribe((mouseX, mouseY, button) -> {
             if (InputState.isShiftDown()) {
-                if (crosshairContainer.children().getFirst() instanceof SelectBoxComponent selectBox) {
+                SelectBoxComponent selectBox = rootComponent.childById(SelectBoxComponent.class, "ch/" + crosshairName + "/selectBox");
+                if (selectBox != null) {
                     selectBox.checked(!selectBox.checked());
                 }
             } else {
                 switch (CrosshairManager.getCurrentMenuType()) {
                     case MAIN -> {
-                        crosshairItems.forEach((item, name) -> item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR)));
+                        crosshairs.forEach(name -> {
+                            FlowLayout item = rootComponent.childById(FlowLayout.class, "ch/" + name + "/container");
+                            if (item != null) {
+                                item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR));
+                            }
+                        });
                         
                         if(config.currentCrosshair != null && config.currentCrosshair.getPath().equals(crosshairName)) {
                             crosshairService.setCurrentCrosshair(null, MenuType.MAIN);
@@ -139,7 +145,12 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                         crosshairService.setCurrentCrosshair(crosshairName, MenuType.MAIN);
                     }
                     case TARGET -> {
-                        crosshairItems.forEach((item, name) -> item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR)));
+                        crosshairs.forEach(name -> {
+                            FlowLayout item = rootComponent.childById(FlowLayout.class, "ch/" + name + "/container");
+                            if (item != null) {
+                                item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR));
+                            }
+                        });
                         
                         if(config.currentTargetCrosshair != null && config.currentTargetCrosshair.getPath().equals(crosshairName)) {
                             crosshairService.setCurrentCrosshair(null, MenuType.TARGET);
@@ -154,7 +165,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
             return true;
         });
 
-        crosshairItems.put(crosshairContainer, crosshairName);
+        crosshairs.add(crosshairName);
 
         return crosshairContainer;
     }
@@ -199,12 +210,9 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                 Text.of("Delete"),
                 (mouseX, mouseY, button) -> {
                     List<String> toDelete = new ArrayList<>();
-                    crosshairItems.forEach((item, name) -> {
-                        if (item == null) return;
-
-                        if (item.children().getFirst() instanceof SelectBoxComponent selectBox) {
-                            if (!selectBox.checked()) return;
-
+                    crosshairs.forEach(name -> {
+                        SelectBoxComponent selectBox = rootComponent.childById(SelectBoxComponent.class, "ch/" + name + "/selectBox");
+                        if (selectBox != null && selectBox.checked()) {
                             toDelete.add(name);
                         }
                     });
@@ -228,11 +236,14 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                 rootComponent.childById(FlowLayout.class, "changeMenuButton").tooltip(Text.of("Change Menu(Current: Target)"));
                 
                 Identifier currentTargetCrosshair = this.config.currentTargetCrosshair;
-                crosshairItems.forEach((item, name) -> {
-                    if (currentTargetCrosshair != null && name.equals(currentTargetCrosshair.getPath())) {
-                        item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR).and(Surface.outline(0xD0FFFFFF)));
-                    } else {
-                        item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR));
+                crosshairs.forEach(name -> {
+                    FlowLayout item = rootComponent.childById(FlowLayout.class, "ch/" + name + "/container");
+                    if (item != null) {
+                        if (currentTargetCrosshair != null && name.equals(currentTargetCrosshair.getPath())) {
+                            item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR).and(Surface.outline(0xD0FFFFFF)));
+                        } else {
+                            item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR));
+                        }
                     }
                 });
             } else if (CrosshairManager.getCurrentMenuType() == MenuType.TARGET) {
@@ -241,17 +252,21 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                 rootComponent.childById(FlowLayout.class, "changeMenuButton").tooltip(Text.of("Change Menu(Current: Main)"));
                 
                 Identifier currentCrosshair = this.config.currentCrosshair;
-                crosshairItems.forEach((item, name) -> {
-                    if (currentCrosshair != null && name.equals(currentCrosshair.getPath())) {
-                        item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR).and(Surface.outline(0xD0FFFFFF)));
-                    } else {
-                        item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR));
+                crosshairs.forEach(name -> {
+                    FlowLayout item = rootComponent.childById(FlowLayout.class, "ch/" + name + "/container");
+                    if (item != null) {
+                        if (currentCrosshair != null && name.equals(currentCrosshair.getPath())) {
+                            item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR).and(Surface.outline(0xD0FFFFFF)));
+                        } else {
+                            item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR));
+                        }
                     }
                 });
             }
 
-            crosshairItems.forEach((item, name) -> {
-                if(item.children().getFirst() instanceof SelectBoxComponent selectBox) {
+            crosshairs.forEach(name -> {
+                SelectBoxComponent selectBox = rootComponent.childById(SelectBoxComponent.class, "ch/" + name + "/selectBox");
+                if (selectBox != null) {
                     selectBox.checked(false);
                 }
             });
