@@ -36,7 +36,7 @@ public class CanvasScreen extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout rootComponent) {
-        addTopUIComponents(rootComponent);
+        buildTopButtons(rootComponent);
         
         FlowLayout colorPickerContainer = rootComponent.childById(FlowLayout.class, "colorPickerContainer").gap(8);
         
@@ -143,15 +143,15 @@ public class CanvasScreen extends BaseUIModelScreen<FlowLayout> {
 
         rootComponent.childById(FlowLayout.class, "gridContainer").child(canvasGrid);
 
-        addUIComponents(rootComponent);
+        buildBottomButtons(rootComponent);
     }
     
-    private void addTopUIComponents(FlowLayout rootComponent) {
+    private void buildTopButtons(FlowLayout rootComponent) {
         rootComponent.childById(FlowLayout.class, "topControlContainer")
                 .surface(Surface.blur(1f, 1f).and(Surface.flat(0xB4101010)));
     }
 
-    private void addUIComponents(FlowLayout rootComponent) {
+    private void buildBottomButtons(FlowLayout rootComponent) {
         FlowLayout controlContainer = rootComponent.childById(FlowLayout.class, "controlContainer");
         controlContainer.surface(Surface.blur(1f, 1f).and(Surface.flat(0xB4101010)).and(new TopOutlineSurface(0xD0666666)));
 

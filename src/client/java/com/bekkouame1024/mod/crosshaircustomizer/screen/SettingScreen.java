@@ -44,9 +44,10 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
         config = CrosshairCustomizer.CONFIG;
         
         CrosshairManager.setCurrentMenuType(MenuType.MAIN);
-        addTopUIComponents(rootComponent);
+
+        buildTopButtons(rootComponent);
         buildCrosshairGrid(rootComponent);
-        addUIComponents(rootComponent);
+        buildBottomButtons(rootComponent);
     }
 
     private void buildCrosshairGrid(FlowLayout rootComponent) {
@@ -170,7 +171,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
         return crosshairContainer;
     }
 
-    private void addTopUIComponents(FlowLayout rootComponent) {
+    private void buildTopButtons(FlowLayout rootComponent) {
         FlowLayout topControlContainer = rootComponent.childById(FlowLayout.class, "topControlContainer");
         topControlContainer.surface(Surface.flat(0xB4101010).and(Surface.blur(1, 1)));
 
@@ -227,7 +228,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
         );
     }
 
-    private void addUIComponents(FlowLayout rootComponent) {
+    private void buildBottomButtons(FlowLayout rootComponent) {
         rootComponent.childById(FlowLayout.class, "changeMenuButton").mouseDown().subscribe((mouseX, mouseY, button) -> {
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             if (CrosshairManager.getCurrentMenuType() == MenuType.MAIN) {
