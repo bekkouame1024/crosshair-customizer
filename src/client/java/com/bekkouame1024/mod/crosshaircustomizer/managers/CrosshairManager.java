@@ -5,7 +5,6 @@ import com.bekkouame1024.mod.crosshaircustomizer.CrosshairCustomizer;
 import com.bekkouame1024.mod.crosshaircustomizer.ModConfig;
 import com.bekkouame1024.mod.crosshaircustomizer.model.MenuType;
 import com.bekkouame1024.mod.crosshaircustomizer.repository.CrosshairRepository;
-import com.bekkouame1024.mod.crosshaircustomizer.utils.FileNameValidator;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.NativeImage;
@@ -94,7 +93,7 @@ public class CrosshairManager {
             for (int y = 0; y < bufferedImage.getHeight(); y++) {
                 for (int x = 0; x < bufferedImage.getWidth(); x++) {
                     //? if >=1.21 <=1.21.1 {
-                    /*image.setColor(x, y, bufferedImage.getRGB(x, y));
+                    /*image.setColor(x, y, argbToAbgr(bufferedImage.getRGB(x, y)));
                      *///?}
 
                     //? if >=1.21.4 <=1.21.8 {
@@ -170,5 +169,17 @@ public class CrosshairManager {
     
     public static void setCurrentMenuType(MenuType menuType) {
         currentMenuType = menuType;
+    }
+
+    public static int argbToAbgr(int argb) {
+        int a = (argb >>> 24) & 0xFF;
+        int r = (argb >>> 16) & 0xFF;
+        int g = (argb >>>  8) & 0xFF;
+        int b =  argb         & 0xFF;
+
+        return (a << 24)
+                | (b << 16)
+                | (g << 8)
+                | r;
     }
 }
