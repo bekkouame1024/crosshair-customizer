@@ -1,8 +1,8 @@
 package com.bekkouame1024.mod.crosshaircustomizer.managers;
 
-import com.bekkouame1024.mod.crosshaircustomizer.ConfigManager;
+import com.bekkouame1024.mod.crosshaircustomizer.config.ConfigManager;
 import com.bekkouame1024.mod.crosshaircustomizer.CrosshairCustomizer;
-import com.bekkouame1024.mod.crosshaircustomizer.ModConfig;
+import com.bekkouame1024.mod.crosshaircustomizer.config.ModConfig;
 import com.bekkouame1024.mod.crosshaircustomizer.model.MenuType;
 import com.bekkouame1024.mod.crosshaircustomizer.repository.CrosshairRepository;
 import net.minecraft.client.MinecraftClient;
@@ -32,7 +32,7 @@ public class CrosshairManager {
         
         Identifier id = CROSSHAIRS.get(name);
         if (id != null) {
-            config.currentCrosshair = id;
+            config.currentCrosshair = id.toString();
             ConfigManager.save(config);
         } else {
             CrosshairCustomizer.LOGGER.warn("Crosshair not found: {}", name);
@@ -44,7 +44,7 @@ public class CrosshairManager {
         
         Identifier id = CROSSHAIRS.get(name);
         if (id != null) {
-            config.currentTargetCrosshair = id;
+            config.currentTargetCrosshair = id.toString();
             ConfigManager.save(config);
         } else {
             CrosshairCustomizer.LOGGER.warn("Crosshair not found: {}", name);
@@ -132,7 +132,7 @@ public class CrosshairManager {
         }
         
         config.crosshairs.removeIf(entry -> entry.file.equals(name + ".png"));
-        if (config.currentCrosshair != null && config.currentCrosshair.equals(id)) {
+        if (config.currentCrosshair != null && config.currentCrosshair.equals(id.toString())) {
             config.currentCrosshair = null;
         }
         ConfigManager.save(config);

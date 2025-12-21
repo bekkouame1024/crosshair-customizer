@@ -2,7 +2,7 @@ package com.bekkouame1024.mod.crosshaircustomizer.mixin.client;
 
 import com.bekkouame1024.mod.crosshaircustomizer.CrosshairCustomizer;
 import com.bekkouame1024.mod.crosshaircustomizer.utils.CustomCrosshairRenderer;
-import com.bekkouame1024.mod.crosshaircustomizer.ModConfig;
+import com.bekkouame1024.mod.crosshaircustomizer.config.ModConfig;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.MinecraftClient;
@@ -41,21 +41,21 @@ public class InGameHudMixin {
     private void drawCustomCrosshairWrap(DrawContext context, Identifier texture, int x, int y, int width, int height, Operation<Void> original) {
         ModConfig config = CrosshairCustomizer.CONFIG;
         HitResult hitResult = client.crosshairTarget;
-        
-        Identifier currentCrosshair = config.currentCrosshair;
+
+        String currentCrosshair = config.currentCrosshair;
         if(currentCrosshair == null) {
             original.call(context, texture, x, y, width, height);
             return;
         }
         
         if (texture.equals(Identifier.ofVanilla("hud/crosshair"))){
-            Identifier crosshairToDraw = currentCrosshair;
-            
+            Identifier crosshairToDraw = Identifier.of(currentCrosshair);
+
             if (hitResult instanceof EntityHitResult entityHit) {
                 Entity entity = entityHit.getEntity();
-                
+
                 if (entity instanceof PlayerEntity && config.currentTargetCrosshair != null) {
-                    crosshairToDraw = config.currentTargetCrosshair;
+                    crosshairToDraw = Identifier.of(config.currentTargetCrosshair);
                 }
             }
             
@@ -80,20 +80,20 @@ public class InGameHudMixin {
         ModConfig config = CrosshairCustomizer.CONFIG;
         HitResult hitResult = client.crosshairTarget;
 
-        Identifier currentCrosshair = config.currentCrosshair;
+        String currentCrosshair = config.currentCrosshair;
         if(currentCrosshair == null) {
             original.call(context, renderLayers, texture, x, y, width, height);
             return;
         }
 
         if (texture.equals(Identifier.ofVanilla("hud/crosshair"))){
-            Identifier crosshairToDraw = currentCrosshair;
+            Identifier crosshairToDraw = Identifier.of(currentCrosshair);
 
             if (hitResult instanceof EntityHitResult entityHit) {
                 Entity entity = entityHit.getEntity();
 
                 if (entity instanceof PlayerEntity && config.currentTargetCrosshair != null) {
-                    crosshairToDraw = config.currentTargetCrosshair;
+                    crosshairToDraw = Identifier.of(config.currentTargetCrosshair);
                 }
             }
 
@@ -119,20 +119,20 @@ public class InGameHudMixin {
         ModConfig config = CrosshairCustomizer.CONFIG;
         HitResult hitResult = client.crosshairTarget;
         
-        Identifier currentCrosshair = config.currentCrosshair;
+        String currentCrosshair = config.currentCrosshair;
         if(currentCrosshair == null) {
             original.call(context, pipeline, texture, x, y, width, height);
             return;
         }
         
         if (texture.equals(Identifier.ofVanilla("hud/crosshair"))){
-            Identifier crosshairToDraw = currentCrosshair;
+            Identifier crosshairToDraw = Identifier.of(currentCrosshair);
             
             if (hitResult instanceof EntityHitResult entityHit) {
                 Entity entity = entityHit.getEntity();
                 
                 if (entity instanceof PlayerEntity && config.currentTargetCrosshair != null) {
-                    crosshairToDraw = config.currentTargetCrosshair;
+                    crosshairToDraw = Identifier.of(config.currentTargetCrosshair);
                 }
             }
             

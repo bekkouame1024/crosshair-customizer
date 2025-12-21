@@ -1,15 +1,12 @@
-package com.bekkouame1024.mod.crosshaircustomizer;
-
-
-import net.minecraft.util.Identifier;
+package com.bekkouame1024.mod.crosshaircustomizer.config;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ModConfig {
-    public int version = 1;
-    public Identifier currentCrosshair = null;
-    public Identifier currentTargetCrosshair = null;
+    public int version = 2;
+    public String currentCrosshair = null;
+    public String currentTargetCrosshair = null;
     public List<CrosshairEntry> crosshairs = new ArrayList<>();
 
     public static class CrosshairEntry {

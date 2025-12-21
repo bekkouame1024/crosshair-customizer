@@ -1,8 +1,8 @@
 package com.bekkouame1024.mod.crosshaircustomizer.service;
 
-import com.bekkouame1024.mod.crosshaircustomizer.ConfigManager;
+import com.bekkouame1024.mod.crosshaircustomizer.config.ConfigManager;
 import com.bekkouame1024.mod.crosshaircustomizer.CrosshairCustomizer;
-import com.bekkouame1024.mod.crosshaircustomizer.ModConfig;
+import com.bekkouame1024.mod.crosshaircustomizer.config.ModConfig;
 import com.bekkouame1024.mod.crosshaircustomizer.managers.CrosshairManager;
 import com.bekkouame1024.mod.crosshaircustomizer.repository.CrosshairRepository;
 import com.bekkouame1024.mod.crosshaircustomizer.utils.FileNameValidator;
@@ -142,14 +142,14 @@ public class CrosshairService {
         if (menuType == MenuType.MAIN) {
             if (this.config.currentCrosshair == null) return -1;
             for (int i = 0; i < this.config.crosshairs.size(); i++) {
-                if (this.config.crosshairs.get(i).file.replace(".png", "").equals(this.config.currentCrosshair.getPath())) {
+                if (this.config.crosshairs.get(i).file.replace(".png", "").equals(Identifier.of(this.config.currentCrosshair).getPath())) {
                     return i;
                 }
             }
         } else if (menuType == MenuType.TARGET) {
             if (this.config.currentTargetCrosshair == null) return -1;
             for (int i = 0; i < this.config.crosshairs.size(); i++) {
-                if (this.config.crosshairs.get(i).file.replace(".png", "").equals(this.config.currentTargetCrosshair.getPath())) {
+                if (this.config.crosshairs.get(i).file.replace(".png", "").equals(Identifier.of(this.config.currentTargetCrosshair).getPath())) {
                     return i;
                 }
             }

@@ -1,6 +1,7 @@
 package com.bekkouame1024.mod.crosshaircustomizer.screen;
 
 import com.bekkouame1024.mod.crosshaircustomizer.*;
+import com.bekkouame1024.mod.crosshaircustomizer.config.ModConfig;
 import com.bekkouame1024.mod.crosshaircustomizer.input.InputState;
 import com.bekkouame1024.mod.crosshaircustomizer.managers.CrosshairManager;
 import com.bekkouame1024.mod.crosshaircustomizer.model.MenuType;
@@ -110,13 +111,11 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
         crosshairContainer.id("ch/" + crosshairName + "/container");
         
         if(CrosshairManager.getCurrentMenuType() == MenuType.MAIN) {
-            Identifier currentCrosshair = this.config.currentCrosshair;
-            if (currentCrosshair != null && crosshairName.equals(currentCrosshair.getPath())) {
+            if (this.config.currentCrosshair != null && crosshairName.equals(Identifier.of(this.config.currentCrosshair).getPath())) {
                 crosshairContainer.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR).and(Surface.outline(0xD0FFFFFF)));
             }
         } else if (CrosshairManager.getCurrentMenuType() == MenuType.TARGET) {
-            Identifier currentTargetCrosshair = this.config.currentTargetCrosshair;
-            if (currentTargetCrosshair != null && crosshairName.equals(currentTargetCrosshair.getPath())) {
+            if (this.config.currentTargetCrosshair != null && crosshairName.equals(Identifier.of(this.config.currentTargetCrosshair).getPath())) {
                 crosshairContainer.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR).and(Surface.outline(0xD0FFFFFF)));
             }
         }
@@ -138,7 +137,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                             }
                         });
                         
-                        if(config.currentCrosshair != null && config.currentCrosshair.getPath().equals(crosshairName)) {
+                        if(config.currentCrosshair != null && Identifier.of(config.currentCrosshair).getPath().equals(crosshairName)) {
                             crosshairService.setCurrentCrosshair(null, MenuType.MAIN);
                             return true;
                         }
@@ -153,7 +152,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                             }
                         });
                         
-                        if(config.currentTargetCrosshair != null && config.currentTargetCrosshair.getPath().equals(crosshairName)) {
+                        if(config.currentTargetCrosshair != null && Identifier.of(config.currentTargetCrosshair).getPath().equals(crosshairName)) {
                             crosshairService.setCurrentCrosshair(null, MenuType.TARGET);
                             return true;
                         }
@@ -236,11 +235,10 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                 
                 rootComponent.childById(FlowLayout.class, "changeMenuButton").tooltip(Text.of("Change Menu(Current: Target)"));
                 
-                Identifier currentTargetCrosshair = this.config.currentTargetCrosshair;
                 crosshairs.forEach(name -> {
                     FlowLayout item = rootComponent.childById(FlowLayout.class, "ch/" + name + "/container");
                     if (item != null) {
-                        if (currentTargetCrosshair != null && name.equals(currentTargetCrosshair.getPath())) {
+                        if (this.config.currentTargetCrosshair != null && name.equals(Identifier.of(this.config.currentTargetCrosshair).getPath())) {
                             item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR).and(Surface.outline(0xD0FFFFFF)));
                         } else {
                             item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR));
@@ -252,11 +250,10 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
 
                 rootComponent.childById(FlowLayout.class, "changeMenuButton").tooltip(Text.of("Change Menu(Current: Main)"));
                 
-                Identifier currentCrosshair = this.config.currentCrosshair;
                 crosshairs.forEach(name -> {
                     FlowLayout item = rootComponent.childById(FlowLayout.class, "ch/" + name + "/container");
                     if (item != null) {
-                        if (currentCrosshair != null && name.equals(currentCrosshair.getPath())) {
+                        if (this.config.currentCrosshair != null && name.equals(Identifier.of(this.config.currentCrosshair).getPath())) {
                             item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR).and(Surface.outline(0xD0FFFFFF)));
                         } else {
                             item.surface(Surface.flat(CROSSHAIR_CONTAINER_COLOR));

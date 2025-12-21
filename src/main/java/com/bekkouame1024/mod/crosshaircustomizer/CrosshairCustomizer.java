@@ -1,5 +1,7 @@
 package com.bekkouame1024.mod.crosshaircustomizer;
 
+import com.bekkouame1024.mod.crosshaircustomizer.config.ConfigManager;
+import com.bekkouame1024.mod.crosshaircustomizer.config.ModConfig;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
