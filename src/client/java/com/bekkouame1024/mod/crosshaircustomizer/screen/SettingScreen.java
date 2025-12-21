@@ -278,7 +278,7 @@ public class SettingScreen extends BaseUIModelScreen<FlowLayout> {
                 .and(new TopOutlineSurface(0xD0666666))
         );
 
-        controlContainer.child(UiComponentFactory.labeledIconButton(Identifier.of("crosshaircustomizer:textures/gui/add.png"),
+        controlContainer.child(UiComponentFactory.labeledIconButton(Identifier.of("crosshaircustomizer:textures/gui/draw.png"),
                 buttonSprite,
                 Text.of("Draw"),
                 (mouseX, mouseY, button) -> {
