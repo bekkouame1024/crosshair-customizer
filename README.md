@@ -10,9 +10,14 @@ This repository contains the source code and development resources for contribut
 This project uses **Stonecutter** to support multiple Minecraft versions.
 If you are contributing or building the mod yourself, please refer to Stonecutter’s documentation for details on version switching and workspace setup.
 
+Please be aware that commit messages in this repository are primarily written in Japanese.
+
 ## Contributing
 Issues and Pull Requests are welcome.
+You are welcome to submit them in any language (including English and Japanese).
+
 Please note that the maintainer is not highly experienced with handling Issue and PR workflows, so responses may take time.
+
 Communication in languages other than Japanese is also welcome, but may further delay responses.
 
 ## API
